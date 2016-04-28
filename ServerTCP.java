@@ -1,3 +1,6 @@
+//Zookeeper connection initiation code was acquired from tutorialspoint.com/zookeeper
+
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
