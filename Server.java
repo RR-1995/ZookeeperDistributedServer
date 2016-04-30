@@ -1,3 +1,4 @@
+package zookeeper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -30,8 +31,8 @@ public class Server{
 		Logger.getLogger("org.apache.zookeeper").setLevel(Level.WARN);
 
 		//String host = "192.168.56.101:2181";
-		String host = "192.168.56.101:2181,192.168.56.102:2181,192.168.56.103:2181";
-		String inventoryPath = "inventory.txt";
+		String host = "localhost:2181,localhost:2182,localhost:2183";
+		String inventoryPath = "C:\\Users\\Robert\\Documents\\UT\\Spring2016\\ConcurrentandDistributed\\ZookeeperProject\\input\\inventory.txt";
 		System.out.printf("starting");
 
 try{
@@ -55,15 +56,25 @@ try{
 	
 			//zoo.delete("/store/shoes", -1);
 		zoo.create("/command" , placeholder, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-	
+		} catch (Exception e){}
+		try{
 		zoo.create("/store", placeholder, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-
-		  //format "customername item quantity"
+	} catch (Exception e){}
+	
+	//format "customername item quantity"
+	try{
     	zoo.create("/orders", placeholder, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+	} catch (Exception e){}
     	//format "#, #, #"
+	try{
     	zoo.create("/customers", placeholder, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-	} catch (KeeperException e){}
-		catch (InterruptedException ex){}
+	} catch (Exception e){}
+	try{
+    	zoo.create("/commandNum", placeholder, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+	} catch (Exception e){}
+	try{
+    	zoo.create("/orderNum", ("0").getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+	} catch (Exception e){}
 	try{
     // parse the inventory file
   BufferedReader br = new BufferedReader(new FileReader(new File(inventoryPath)));
@@ -74,16 +85,14 @@ try{
     		if(!line.equals(""))
     		{
     			String[] info = line.split(" ");
-					byte[] itemCount = {(byte) Integer.parseInt(info[1])};
-					zoo.create("/store/" + info[0], itemCount, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+					byte[] itemCount = info[1].getBytes();
+					zoo.create("/store/" + info[0], itemCount, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     		}
     	}
  		//byte[] shoeCount = {20};
 		//zoo.create("/store/shoes", shoeCount, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
     	//set watch
-		}catch (KeeperException e){}
-		catch (InterruptedException ex){}
-		catch(IOException e) {}
+		}catch (Exception e){System.out.println(e.getMessage());}
 		/*for (String thisProduct : myStore.list().keySet()){
 	    byte[] data = {myStore.list().get(thisProduct)};
 			zoo.create("/store/" + thisProduct, data , ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.);
